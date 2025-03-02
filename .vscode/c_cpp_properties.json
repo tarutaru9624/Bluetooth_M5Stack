@@ -4,7 +4,7 @@
             "name": "Mac",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/Users/wk/Documents/**",
+                "/Users/wk/Documents/Arduino/libraries/M5Stack/src/**",
                 "/Users/wk/Library/Arduino15/**"
 
             ],

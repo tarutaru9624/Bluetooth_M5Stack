@@ -3,7 +3,7 @@
 
 BluetoothSerial SerialBT;
 String bluetooth_name = "M5Stack_master";
-uint8_t slave_mac_adder[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00} ;
+uint8_t slave_mac_adder[6] = {0x90, 0x15, 0x06, 0xFD, 0xD2, 0xD6};
 uint8_t send_data[2] = {0xC0, 0xE0};
 uint32_t send_start_time = 0;
 
@@ -15,12 +15,12 @@ void setup() {
 
     SerialBT.begin(bluetooth_name, true);
 
-    Serial.printf("start connect : /r/n");
+    Serial.printf("start connect : ¥r¥n");
     while (connected == (bool)true)
     {
         connected = SerialBT.connect(slave_mac_adder);
     }
-    Serial.printf("success connect : /r/n");
+    Serial.printf("success connect : ¥r¥n");
     
     send_start_time = millis();
     SerialBT.write(send_data, sizeof(send_data));
@@ -33,11 +33,11 @@ void loop() {
     if (SerialBT.available() > 0)
     {
         receive_data = SerialBT.read();
-        Serial.printf("receive data : %u/r/n", receive_data);
+        Serial.printf("receive data : %u¥r¥n", receive_data);
         
         if (receive_data == 0xE0)
         {
-            Serial.printf("comm time : %u/r/n", (millis() - send_start_time));
+            Serial.printf("comm time : %u¥r¥n", (millis() - send_start_time));
         }
         
     }
