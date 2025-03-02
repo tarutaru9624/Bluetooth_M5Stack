@@ -8,7 +8,10 @@ BluetoothSerial SerialBT;
 String bluetooth_name = "M5Stack_master";
 uint8_t slave_mac_adder[6] = {0x90, 0x15, 0x06, 0xFD, 0xD2, 0xD6};
 uint8_t send_data[50] = {0xC0, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x40, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0xE0};
-uint32_t send_start_time = 0;
+uint32_t start_time = 0;
+uint32_t send_time = 0;
+uint32_t wait_time = 0;
+uint32_t receive_time = 0;
 uint8_t receive_buffer[50] = {0};
 
 // CPU周波数を最大に設定
@@ -27,7 +30,7 @@ void optimizeBluetooth() {
 
 void setup() {
     M5.begin();
-    setCpuFrequencyMax();
+    // setCpuFrequencyMax();
     
     // Bluetooth初期化と最適化
     optimizeBluetooth();
@@ -50,8 +53,10 @@ void setup() {
     }
     
     // 送信開始時間を記録して一度に全データを送信
-    send_start_time = millis();
+    start_time = millis();
     SerialBT.write(send_data, sizeof(send_data));
+    send_time = millis() - start_time;
+    start_time = millis();
 }
 
 void loop() {
@@ -62,10 +67,19 @@ void loop() {
         
         // 終了バイトを検索
         for (int i = 0; i < bytes_read; i++) {
+            if (receive_buffer[i] == 0xC0)
+            {
+                wait_time = millis() - start_time;
+                start_time = millis();
+            }
+            
             if (receive_buffer[i] == 0xE0) {
                 // 通信時間を計測
-                uint32_t comm_time = millis() - send_start_time;
-                Serial.printf("comm time : %u\r\n", comm_time);
+                receive_time = millis() - start_time;
+
+                Serial.printf("send time : %u\r\n", send_time);
+                Serial.printf("wait time : %u\r\n", wait_time);
+                Serial.printf("receive time : %u\r\n", receive_time);
                 
                 // 受信データを表示（デバッグ用）
                 Serial.printf("receive data : ");
