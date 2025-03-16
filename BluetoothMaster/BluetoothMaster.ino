@@ -25,7 +25,7 @@ void optimizeBluetooth() {
     esp_bt_controller_mem_release(ESP_BT_MODE_BLE);
     
     // Bluetoothコントローラーの設定
-    esp_bt_dev_set_device_name(bluetooth_name.c_str());
+    // esp_bt_dev_set_device_name(bluetooth_name.c_str());
 }
 
 void setup() {
@@ -33,7 +33,7 @@ void setup() {
     // setCpuFrequencyMax();
     
     // Bluetooth初期化と最適化
-    optimizeBluetooth();
+    //optimizeBluetooth();
     SerialBT.begin(bluetooth_name, true);
     
     Serial.printf("start connect : \r\n");
